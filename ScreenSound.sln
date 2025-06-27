@@ -46,6 +46,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{15018420
 		Recursos\Pages\MusicasPorGenero.html = Recursos\Pages\MusicasPorGenero.html
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScreenSound.WebAssembly", "ScreenSound.WebAssembly\ScreenSound.WebAssembly.csproj", "{AE680EF2-F008-4EE6-8CDF-84C71A5B886F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{D739D1BF-7AAE-4F5B-A8CA-FA8773869DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D739D1BF-7AAE-4F5B-A8CA-FA8773869DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D739D1BF-7AAE-4F5B-A8CA-FA8773869DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE680EF2-F008-4EE6-8CDF-84C71A5B886F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE680EF2-F008-4EE6-8CDF-84C71A5B886F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE680EF2-F008-4EE6-8CDF-84C71A5B886F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE680EF2-F008-4EE6-8CDF-84C71A5B886F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
