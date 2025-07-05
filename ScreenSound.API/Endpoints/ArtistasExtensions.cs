@@ -39,15 +39,21 @@ public static class ArtistasExtensions
             var nome = artistaRequest.Nome.Trim();
             var imagemArtista = DateTime.Now.ToString("ddMMyyyyhhss") + "." + nome + ".jpeg";
 
-            var path = Path.Combine(env.ContentRootPath, "wwwroot", "FotosPerfil", imagemArtista);
+            string fotoPerfil = $"Artista.jpeg";
+            if (artistaRequest.FotoPerfil != null)
+            {
+                fotoPerfil = $"{imagemArtista}";
 
-            using var ms = new MemoryStream(Convert.FromBase64String(artistaRequest.FotoPerfil!));
-            using var fs = new FileStream(path, FileMode.Create);
-            await ms.CopyToAsync(fs);
+                var path = Path.Combine(env.ContentRootPath, "wwwroot", "FotosPerfil", imagemArtista);
+
+                using var ms = new MemoryStream(Convert.FromBase64String(artistaRequest.FotoPerfil!));
+                using var fs = new FileStream(path, FileMode.Create);
+                await ms.CopyToAsync(fs);
+            }
 
             var artista = new Artista(artistaRequest.Nome, artistaRequest.Bio)
             {
-                FotoPerfil = $"/FotosPerfil/{imagemArtista}"
+                FotoPerfil = fotoPerfil
             };
 
             dal.Adicionar(artista);
