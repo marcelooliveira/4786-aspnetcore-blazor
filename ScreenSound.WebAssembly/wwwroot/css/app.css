@@ -112,3 +112,100 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.layout {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar main";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+}
+
+.header {
+    grid-area: header;
+    background-color: #373740;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: #1e1e2f;
+    padding: 1rem;
+    color: white;
+}
+
+.main-content {
+    grid-area: main;
+    padding: 1.5rem;
+    background: linear-gradient(180deg, #9966FF 0%, #000000 100%);
+    color: white;
+}
+
+.nav-group {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+    .nav-group li {
+        margin: 0.5rem 0;
+    }
+
+a.active {
+    font-weight: bold;
+}
+
+.card-artista {
+    background-color: #222;
+    border: 1px solid #444;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.card-img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.card-body {
+    margin-top: 0.5rem;
+}
+
+    .card-body p.bio {
+        height: 150px;
+    }
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #9966FF;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.pagination {
+    margin-top: 1rem;
+}
+
+.input {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
