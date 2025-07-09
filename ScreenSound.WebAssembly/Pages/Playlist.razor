@@ -1,5 +1,6 @@
 ﻿@page "/Playlist"
 @inject MusicasAPI musicasAPI
+@inject IJSRuntime JS
 <h2>Playlist</h2>
 
 <div class="playlist-header d-flex align-items-center mb-4 p-3 bg-dark rounded">
@@ -49,6 +50,19 @@ else
     <p>Carregando...</p>
 }
 
+<script type="text/javascript">
+    function scrollToElementByClass(className) {
+    const offset = 200; //200 px
+    const element = document.querySelector('.' + className);
+
+    if (element) {
+    const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
+    const scrollTo = elementTop - offset;
+    window.scrollTo({ top: scrollTo, behavior: 'smooth'});
+    }
+    }
+</script>
+
 @code {
     private int? musicaTocandoId;
     private ICollection<MusicaResponse>? musicas;
@@ -68,6 +82,8 @@ else
         {
             musicaTocandoId = musicaId;
 
+            await ScrollToMusicAsync();
+
             await Task.Delay(1200);
 
             if (musicaTocandoId == musicaId)
@@ -77,5 +93,10 @@ else
                 await AlternarPlay(musicaId);
             }
         }
+    }
+
+    private async Task ScrollToMusicAsync()
+    {
+        await JS.InvokeVoidAsync("scrollToElementByClass", "playing-row");
     }
 }
