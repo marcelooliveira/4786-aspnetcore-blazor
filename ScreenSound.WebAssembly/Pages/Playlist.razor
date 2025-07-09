@@ -28,9 +28,11 @@
             <tbody>
                 @foreach (var musica in musicas)
                 {
-                    <tr class="playlist-item">
+                    var isPlaying = musica.Id == musicaTocandoId;
+                    <tr class="playlist-item @(isPlaying ? "playing-row" : null)"
+                    @onclick="() => AlternarPlay(musica.Id)">
                         <td>
-                            <span class="bi fa-icon-playstop" />
+                            <span class="bi fa-icon-playstop @(isPlaying ? "bi-stop-fill" : "bi-play-fill" )" />
                         </td>
                         <td>@musica.Id</td>
                         <td>@musica.Nome</td>
@@ -48,10 +50,32 @@ else
 }
 
 @code {
+    private int? musicaTocandoId;
     private ICollection<MusicaResponse>? musicas;
 
     protected override async Task OnInitializedAsync()
     {
         musicas = await musicasAPI.GetMusicasAsync();
+    }
+
+    private async Task AlternarPlay(int musicaId)
+    {
+        if (musicaTocandoId == musicaId)
+        {
+            musicaTocandoId = null;
+        }
+        else
+        {
+            musicaTocandoId = musicaId;
+
+            await Task.Delay(1200);
+
+            if (musicaTocandoId == musicaId)
+            {
+                musicaId++;
+                StateHasChanged();
+                await AlternarPlay(musicaId);
+            }
+        }
     }
 }
