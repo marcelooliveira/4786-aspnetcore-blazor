@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿ @inject NavigationManager NavigationManager
+ 
+ <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href=""><img src="images/screensound-logo.png" /></a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -35,6 +37,11 @@
                 <NavLink class="nav-link" href="/Playlist">
                     Playlist    
                 </NavLink>
+                <NavLink class="nav-link">
+                    <div @onclick="() => GoToPlaylist()">
+                        Playlist sem rota interna
+                    </div>
+                </NavLink>
             </div>
         </div>
     </nav>
@@ -49,5 +56,10 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void GoToPlaylist()
+    {
+        NavigationManager.NavigateTo("/playlist");
     }
 }
