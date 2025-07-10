@@ -13,6 +13,10 @@ permissions:
   pages: write   # Permite escrever na branch de pages
   id-token: write # Necessário para autenticação OIDC (segurança)
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -21,37 +25,38 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }} # Define a URL de ambiente para o Pages
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4 # Baixa o código do seu repositório
-
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Install .NET Wasm Tools
-      run: dotnet workload install wasm-tools
-
-    - name: Restore Dependencies
-      run: dotnet restore ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj # Restaura os pacotes NuGet
-
-    - name: Build
-      run: dotnet build -c Release --no-restore
-
-    - name: Publish Blazor WebAssembly
-      # Publica o projeto em modo Release para a pasta 'publish/app'
-      # Essa pasta 'publish/app' conterá a pasta wwwroot, que é o que precisamos implantar
-      run: dotnet publish ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj -c Release -o publish/app
-
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-
-    - name: Upload Pages Artifact
-      uses: actions/upload-pages-artifact@v3 # Faz o upload dos arquivos para o GitHub Pages
-      with:
-        path: ./publish/app/wwwroot # O diretório que contém os arquivos que serão implantados
-
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4 # Aciona o deploy final para o GitHub Pages
-      # Este passo não requer 'github_token' explícito, pois usa o OIDC via 'id-token: write'
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Baixa o código do seu repositório
+      
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.0
+      
+      - name: Install .NET Wasm Tools
+        run: dotnet workload install wasm-tools
+      
+      - name: Restore Dependencies
+        run: dotnet restore
+        #run: dotnet restore ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj # Restaura os pacotes NuGet
+      
+      - name: Build
+        run: dotnet build -c Release --no-restore
+      
+      - name: Publish Blazor WebAssembly
+        # Publica o projeto em modo Release para a pasta 'publish/app'
+        # Essa pasta 'publish/app' conterá a pasta wwwroot, que é o que precisamos implantar
+        run: dotnet publish ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj -c Release -o publish/app
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3 # Faz o upload dos arquivos para o GitHub Pages
+        with:
+          path: ./publish/app/wwwroot # O diretório que contém os arquivos que serão implantados
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Aciona o deploy final para o GitHub Pages
+        # Este passo não requer 'github_token' explícito, pois usa o OIDC via 'id-token: write'
