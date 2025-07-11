@@ -3,19 +3,15 @@ name: Deploy Blazor WebAssembly to GitHub Pages
 on:
   push:
     branches:
-      - Aula4 # ou 'main' ou 'master', dependendo da sua branch principal
+      - gh # ou 'main' ou 'master', dependendo da sua branch principal
   # Permite executar o workflow manualmente
   workflow_dispatch:
 
 # Define as permissões necessárias para o GitHub Pages
 permissions:
-  contents: read # Permite ler o conteúdo do repositório
+  contents: write # Permite ler o conteúdo do repositório
   pages: write   # Permite escrever na branch de pages
   id-token: write # Necessário para autenticação OIDC (segurança)
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -33,20 +29,20 @@ jobs:
         with:
           dotnet-version: 9.0.x
       
-      - name: Install .NET Wasm Tools
-        run: dotnet workload install wasm-tools
+      # - name: Install .NET Wasm Tools
+      #   run: dotnet workload install wasm-tools
       
-      - name: Restore Dependencies
-        run: dotnet restore
-        #run: dotnet restore ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj # Restaura os pacotes NuGet
+      # - name: Restore Dependencies
+      #   run: dotnet restore
+      #   #run: dotnet restore ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj # Restaura os pacotes NuGet
       
-      - name: Build
-        run: dotnet build -c Release --no-restore
+      # - name: Build
+      #   run: dotnet build -c Release --no-restore
       
       - name: Publish Blazor WebAssembly
         # Publica o projeto em modo Release para a pasta 'publish/app'
         # Essa pasta 'publish/app' conterá a pasta wwwroot, que é o que precisamos implantar
-        run: dotnet publish ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj -c Release -o publish/app
+        run: dotnet publish ScreenSound.WebAssembly/ScreenSound.WebAssembly.csproj -c Release --output build
 
       - name: Adjust Base Href
         run: |
@@ -54,42 +50,21 @@ jobs:
           REPO_NAME=$(echo ${{ github.repository }} | awk -F '/' '{print $2}')
           # Modifica o base href no index.html publicado
           # A pasta publish/app é a raiz da nossa publicação, e wwwroot está dentro dela.
-          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO_NAME}/\" />|g" publish/app/wwwroot/index.html
+          sed -i 's/<base href="\/" \/>/<base href="\/${REPO_NAME}\/" \/>/g' build/wwwroot/index.html
           # Este passo é crucial para Blazor WASM em GitHub Pages de repositórios de projeto.
           # Ele ajusta a tag <base href="/"> para <base href="/seu-repositorio-aqui/"> no arquivo index.html publicado.
-
-      - name: Add 404.html for SPA routing
-        run: |
-          # Cria um 404.html na pasta wwwroot para lidar com o roteamento de SPA do Blazor
-          # Isso é necessário para que as rotas internas do Blazor funcionem quando a página é acessada diretamente (ex: /playlist)
-          # O caminho é relativo à raiz da publicação, que é 'publish/app/wwwroot'
-          cat > publish/app/wwwroot/404.html << EOF
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <meta charset="utf-8" />
-              <title>Redirecting...</title>
-              <script type="text/javascript">
-                  var path = window.location.pathname;
-                  // Redireciona para a raiz do seu aplicativo, considerando o nome do repositório
-                  window.location.replace(path.substring(0, path.lastIndexOf('/')) + '/');
-              </script>
-          </head>
-          <body>
-              If you are not redirected automatically, follow this <a href="/">link</a>.
-          </body>
-          </html>
-          EOF
-      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v3 # Faz o upload dos arquivos para o GitHub Pages
-        with:
-          path: ./publish/app/wwwroot # O diretório que contém os arquivos que serão implantados
+      # - name: Upload Pages Artifact
+      #   uses: actions/upload-pages-artifact@v3 # Faz o upload dos arquivos para o GitHub Pages
+      #   with:
+      #     path: ./publish/app/wwwroot # O diretório que contém os arquivos que serão implantados
       
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4 # Aciona o deploy final para o GitHub Pages
         # Este passo não requer 'github_token' explícito, pois usa o OIDC via 'id-token: write'
+        with:
+          folder: build/wwwroot
+          branch: gh-pages
