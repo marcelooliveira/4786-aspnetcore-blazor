@@ -9,7 +9,7 @@ on:
 
 # Define as permissões necessárias para o GitHub Pages
 permissions:
-  contents: write # Permite ler o conteúdo do repositório
+  contents: write # Permite gravar o conteúdo do repositório
   pages: write   # Permite escrever na branch de pages
   id-token: write # Necessário para autenticação OIDC (segurança)
 
