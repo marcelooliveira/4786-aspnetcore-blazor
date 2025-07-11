@@ -3,7 +3,7 @@ name: Deploy Blazor WebAssembly to GitHub Pages
 on:
   push:
     branches:
-      - gh # ou 'main' ou 'master', dependendo da sua branch principal
+      - main # ou 'main' ou 'master', dependendo da sua branch principal
   # Permite executar o workflow manualmente
   workflow_dispatch:
 
